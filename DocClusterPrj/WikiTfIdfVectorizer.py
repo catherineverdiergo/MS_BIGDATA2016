@@ -59,12 +59,14 @@ class WikiTfIdfVectorizer:
             self._max_df = kwargs['max_df']
         if 'min_df' in kwargs:
             self._min_df = kwargs['min_df']
+        if 'use_idf' in kwargs:
+            self._use_idf = kwargs['use_idf']
         if 'use_hashing' in kwargs:
             self._use_hashing = kwargs['use_hashing']
 
-    def vectorize(self):
+    def vectorize(self, wsl):
         print("loading wiki documents dataset")
-        wsl = WikiSampleLoader()
+        #wsl = WikiSampleLoader()
         data = wsl.load_dataset()
         self._cluster_list = data.target_names
         self._labels = data.target

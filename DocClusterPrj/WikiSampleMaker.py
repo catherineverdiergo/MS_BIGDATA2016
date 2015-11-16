@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 import sklearn.datasets.base as base
 import pickle
 import codecs
+import re
 import shutil
 
 class WikiSampleMaker:
@@ -32,7 +33,7 @@ class WikiSampleMaker:
     _nb_doc_per_topic = None
 
     # by default, the topic list is the following:
-    _topic_list = ['Medicine', 'Literature', 'Music', 'Painting', 'Physics', 'History']
+    _topic_list = ['History', 'Literature', 'Medicine', 'Music', 'Painting', 'Physics']
 
     def __init__(self, **kwargs):
         if 'topic_list' in kwargs:
@@ -80,7 +81,8 @@ class WikiSampleMaker:
                 nb_docs = np.random.randint(self._min_doc_per_class, self._max_doc_per_class)
             for idoc in range(0, nb_docs):
                 rank = np.random.randint(0,
-                                         min(len(doc_list["query"]["categorymembers"]), self._category_request_limit))
+                                         min(len(doc_list["query"]["categorymembers"]),
+                                             self._category_request_limit))
                 selected_doc = doc_list["query"]["categorymembers"][rank]
                 if not selected_doc["title"][0:9] == "Category:":
                     # result["documents"].append(self.build_document_url(selected_doc["title"]))
@@ -195,7 +197,7 @@ class WikiSampleMaker:
 wsm = WikiSampleMaker()
 print("Wiki train set generation in progres...")
 # generate 15 document's url for each category
-wsm._nb_doc_per_topic = 100
+wsm._nb_doc_per_topic = 30
 # build the train sample
 train_sample = None
 train_sample = wsm.get_sample()
@@ -220,7 +222,7 @@ wsm.make_cache_sample(train_sample_dir, test_sample_dir, cache_dir)
 print("Wiki binary sample completed.")
 
 # remove train and test directories
-shutil.rmtree(train_sample_dir)
-shutil.rmtree(test_sample_dir)
+#shutil.rmtree(train_sample_dir)
+#shutil.rmtree(test_sample_dir)
 
 #wsm.make_tarfile(sample_dir + ".tar.gz", sample_dir)
